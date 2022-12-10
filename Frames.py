@@ -7,9 +7,10 @@ from pandastable import Table, TableModel
 
 class ControlFrame(object):
 
-    def __init__(self, master, result):
+    def __init__(self, master, result, scrollFrame):
         self.master = master
         self.result = result
+        self.scrollFrame =scrollFrame
 
         self.first_seq = StringVar()
         self.second_seq = StringVar()
@@ -17,6 +18,7 @@ class ControlFrame(object):
         self.mismatch_score = DoubleVar()
         self.gap_penalty = DoubleVar()
         self.score = StringVar()
+
 
         # Default scoring scheme for sequence alignment
         self.match_score.set(3.0)
@@ -67,6 +69,8 @@ class ControlFrame(object):
                     showtoolbar=False,
                     showstatusbar=True,
                     editable=False)
+
+
         newWindow.table.show()
 
     def global_alignment(self):
@@ -92,7 +96,8 @@ class ControlFrame(object):
         self.createTable(ga.dfScoringArray, "Score table")
         self.createTable(ga.dfTracebackArray, "Traceback table")
 
-
+        ansT = ga.ans
+        self.scrollFrame.add(ansT)
 
         # sets the title of the
         # Toplevel widget
@@ -116,7 +121,49 @@ class ResultFrame(object):
         self.master = master
 
         self.label = ttk.Label(master, text = 'Result of sequence alignment:')
-        self.text = Text(master, width = 40, height = 10)
+        self.text = Text(master, width = 65, height = 10)
 
         self.label.grid(column = 0, row = 0, sticky = W)
         self.text.grid(column = 0, row = 1, columnspan = 2)
+
+
+class ScrollBar:
+
+    # constructor
+    def __init__(self, master):
+        self.master = master
+        self.label = ttk.Label(master, text='Result of sequence alignment:')
+
+        v = Scrollbar(master, orient='vertical')
+
+        # attach Scrollbar to root window on
+        # the side
+        v.pack(side=RIGHT, fill=Y)
+
+        # create a Text widget with 15 chars
+        # width and 15 lines height
+        # here xscrollcomannd is used to attach Text
+        # widget to the horizontal scrollbar
+        # here yscrollcomannd is used to attach Text
+        # widget to the vertical scrollbar
+        self.t = Text(master, width=65, height=15, wrap=NONE,
+                 yscrollcommand=v.set)
+        # insert some text into the text widget
+
+
+        # attach Text widget to root window at top
+        self.t.pack(side=TOP, fill=X)
+
+
+        # here command represents the method to
+        # be executed yview is executed on
+        # object 't' Here t may represent any
+        # widget
+        v.config(command=self.t.yview)
+
+        # the root window handles the mouse
+        # click event
+        #root.mainloop()
+    def add(self, ans):
+        for i in ans:
+            self.t.insert(END, i)

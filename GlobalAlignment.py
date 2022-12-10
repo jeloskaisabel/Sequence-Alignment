@@ -3,6 +3,7 @@ from numpy import full
 from IPython.display import HTML,display
 import pandas as pd
 from Alignment import Alignment
+
 class GlobalAlignment(object):
     def __init__(self, seq1, seq2, match_bonus, mismatch_penalty, gap_penalty):
         self.seq1 = seq1
@@ -18,6 +19,7 @@ class GlobalAlignment(object):
         self.column_labels = [label for label in "-" + self.seq2]
         self.dfScoringArray = pd.DataFrame(self.scoring_array, index=self.row_labels, columns=self.column_labels)
         self.dfTracebackArray = pd.DataFrame(self.traceback_array, index=self.row_labels, columns=self.column_labels)
+        self.ans = []
         print("Scoring array:\n", self.scoring_array)
         print("Traceback array:\n", self.traceback_array)
 
@@ -139,13 +141,18 @@ class GlobalAlignment(object):
         aligned_seq1 = ""
         aligned_seq2 = ""
         alignment_indicator = ""
+
         while arrow != "-":
+            self.ans.append("Currently on row:"+ str(row)+"\n")
             print("Currently on row:", row)
+            self.ans.append("Currently on col:" + str(col) + "\n")
             print("Currently on col:", col)
             arrow = self.traceback_array[row, col]
+            self.ans.append("Arrow:" + arrow + "\n")
             print("Arrow:", arrow)
 
             if arrow == up_arrow:
+                self.ans.append("insert indel into top sequence\n")
                 print("insert indel into top sequence")
                 # We want to add the new indel onto the left
                 # side of the growing aligned sequence
@@ -155,6 +162,7 @@ class GlobalAlignment(object):
                 row -= 1
 
             elif arrow == up_left_arrow:
+                self.ans.append("match or mismatch\n")
                 print("match or mismatch")
                 # Note that we look up the row-1 and col-1 indexes
                 # because there is an extra "-" character at the
@@ -171,6 +179,7 @@ class GlobalAlignment(object):
                 col -= 1
 
             elif arrow == left_arrow:
+                self.ans.append("Insert indel into left sequence\n")
                 print("Insert indel into left sequence")
                 aligned_seq1 = "-" + aligned_seq1
                 aligned_seq2 = self.seq2[col - 1] + aligned_seq2
@@ -191,6 +200,7 @@ class GlobalAlignment(object):
 
         #print(dfScoringArray)
         #print(dfTracebackArray)
+        print(self.ans)
         self.dfScoringArray = pd.DataFrame(self.scoring_array, index=self.row_labels, columns=self.column_labels)
         self.dfTracebackArray = pd.DataFrame(self.traceback_array, index=self.row_labels, columns=self.column_labels)
         ans = Alignment(aligned_seq1, aligned_seq2, self.scoring_array[len(self.seq1)][len(self.seq2)])
