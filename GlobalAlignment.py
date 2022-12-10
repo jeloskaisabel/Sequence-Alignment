@@ -14,6 +14,10 @@ class GlobalAlignment(object):
         n_columns = len("-" + self.seq2)
         self.scoring_array = full([n_rows, n_columns], 0.0)
         self.traceback_array = full([n_rows, n_columns], "-")
+        self.row_labels = [label for label in "-" + self.seq1]
+        self.column_labels = [label for label in "-" + self.seq2]
+        self.dfScoringArray = pd.DataFrame(self.scoring_array, index=self.row_labels, columns=self.column_labels)
+        self.dfTracebackArray = pd.DataFrame(self.traceback_array, index=self.row_labels, columns=self.column_labels)
         print("Scoring array:\n", self.scoring_array)
         print("Traceback array:\n", self.traceback_array)
 
@@ -37,8 +41,7 @@ class GlobalAlignment(object):
         # build an array of zeroes
         n_rows = len(self.seq1) + 1  # need an extra row up top
         n_columns = len(self.seq2) + 1  # need an extra column on the left
-        row_labels = [label for label in "-" + self.seq1]
-        column_labels = [label for label in "-" + self.seq2]
+
 
         self.scoring_array = full([n_rows, n_columns], 0.0)
         self.traceback_array = full([n_rows, n_columns], "-")
@@ -180,10 +183,16 @@ class GlobalAlignment(object):
                 raise ValueError(
                     f"Traceback array entry at {row},{col}: {arrow} is not recognized as an up arrow ({up_arrow}),left_arrow ({left_arrow}), up_left_arrow ({up_left_arrow}), or a stop ({stop}).")
             # print(traceback_array,-row,-col,traceback_array[-row,-col])
-            print(aligned_seq1)
-            print(alignment_indicator)
-            print(aligned_seq2)
-        print(self.scoring_array)
+            #print(aligned_seq1)
+            #print(alignment_indicator)
+            #print(aligned_seq2)
+        #print(self.scoring_array)
+        #print(self.traceback_array)
+
+        #print(dfScoringArray)
+        #print(dfTracebackArray)
+        self.dfScoringArray = pd.DataFrame(self.scoring_array, index=self.row_labels, columns=self.column_labels)
+        self.dfTracebackArray = pd.DataFrame(self.traceback_array, index=self.row_labels, columns=self.column_labels)
         ans = Alignment(aligned_seq1, aligned_seq2, self.scoring_array[len(self.seq1)][len(self.seq2)])
         return ans
 

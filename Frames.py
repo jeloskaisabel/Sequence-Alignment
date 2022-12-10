@@ -3,6 +3,7 @@ from tkinter import ttk
 from Bio import pairwise2
 from GlobalAlignment import GlobalAlignment
 from Alignment import Alignment
+from pandastable import Table, TableModel
 
 class ControlFrame(object):
 
@@ -57,6 +58,17 @@ class ControlFrame(object):
         self.entry5.grid(column = 1, row = 5)
 
 
+    def createTable(self, df, name):
+        newWindow = Toplevel(self.master)
+        newWindow.title(name)
+        newWindow.geometry("400x400")
+        newWindow.table = Table(
+                    newWindow, dataframe=df,
+                    showtoolbar=False,
+                    showstatusbar=True,
+                    editable=False)
+        newWindow.table.show()
+
     def global_alignment(self):
         """Align two sequences globally"""
         first = self.first_seq.get()
@@ -75,6 +87,17 @@ class ControlFrame(object):
         #text = pairwise2.format_alignment(*alignments[0])
         self.result.text.delete(1.0, END)
         self.result.text.insert(1.0, text)
+        print(ga.dfScoringArray)
+        print(ga.dfTracebackArray)
+        self.createTable(ga.dfScoringArray, "Score table")
+        self.createTable(ga.dfTracebackArray, "Traceback table")
+
+
+
+        # sets the title of the
+        # Toplevel widget
+
+
 
     def local_alignment(self):
         """Align two sequences locally"""
