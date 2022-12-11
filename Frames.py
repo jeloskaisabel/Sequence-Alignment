@@ -26,15 +26,15 @@ class ControlFrame(object):
         self.gap_penalty.set(-1.0)
         self.score.set("Alignment score:")
 
-        self.label1 = ttk.Label(self.master, text = 'Specify two DNA sequences with bases A, T, G, and C')
-        self.label2 = ttk.Label(self.master, text = 'First sequence')
-        self.label3 = ttk.Label(self.master, text = 'Second sequence')
+        self.label1 = ttk.Label(self.master, text = 'Especifique dos secuencias de ADN con bases A, T, G y C')
+        self.label2 = ttk.Label(self.master, text = 'Primera secuencia')
+        self.label3 = ttk.Label(self.master, text = 'Segunda secuencia')
         self.label4 = ttk.Label(self.master, text = 'Match score')
-        self.label5 = ttk.Label(self.master, text = 'Mismatch score')
+        self.label5 = ttk.Label(self.master, text = 'Mismatch penalty')
         self.label6 = ttk.Label(self.master, text = 'Gap penalty')
 
-        self.button1 = ttk.Button(self.master, text = 'Global alignment', command = self.global_alignment)
-        self.button2 = ttk.Button(self.master, text = 'Local alignment', command = self.local_alignment)
+        self.button1 = ttk.Button(self.master, text = 'Alineamiento Global', command = self.global_alignment)
+        self.button2 = ttk.Button(self.master, text = 'Alineamiento Local', command = self.local_alignment)
 
         self.entry1 = ttk.Entry(self.master, textvariable = self.first_seq)
         self.entry2 = ttk.Entry(self.master, textvariable = self.second_seq)
@@ -133,37 +133,14 @@ class ScrollBar:
     def __init__(self, master):
         self.master = master
         self.label = ttk.Label(master, text='Result of sequence alignment:')
-
         v = Scrollbar(master, orient='vertical')
-
-        # attach Scrollbar to root window on
-        # the side
         v.pack(side=RIGHT, fill=Y)
-
-        # create a Text widget with 15 chars
-        # width and 15 lines height
-        # here xscrollcomannd is used to attach Text
-        # widget to the horizontal scrollbar
-        # here yscrollcomannd is used to attach Text
-        # widget to the vertical scrollbar
         self.t = Text(master, width=65, height=15, wrap=NONE,
                  yscrollcommand=v.set)
-        # insert some text into the text widget
 
-
-        # attach Text widget to root window at top
         self.t.pack(side=TOP, fill=X)
-
-
-        # here command represents the method to
-        # be executed yview is executed on
-        # object 't' Here t may represent any
-        # widget
         v.config(command=self.t.yview)
 
-        # the root window handles the mouse
-        # click event
-        #root.mainloop()
     def add(self, ans):
         for i in ans:
             self.t.insert(END, i)
